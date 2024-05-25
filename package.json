@@ -1,5 +1,5 @@
 {
-  "name": "activity-logger",
+  "name": "activity-logger-94d1",
   "private": true,
   "sideEffects": false,
   "scripts": {
@@ -16,7 +16,6 @@
     "deploy:db": "prisma migrate deploy",
     "docker": "docker-compose -f docker-compose.dev.yaml up -d",
     "format": "prettier --write .",
-    "format:repo": "npm run format && npm run lint -- --fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
