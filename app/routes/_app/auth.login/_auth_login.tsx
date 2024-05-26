@@ -11,15 +11,15 @@ export const meta: MetaFunction = () => [{ title: "Remix Railway | Login" }]
 
 export async function action({ request }: ActionFunctionArgs) {
   return await authenticator.authenticate("google", request, {
-    successRedirect: "/",
+    successRedirect: "/dashboard",
     failureRedirect: "/auth/login",
   })
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  // If the user is already authenticated redirect to home page
+  // If the user is already authenticated redirect to dashboard page
   return await authenticator.isAuthenticated(request, {
-    successRedirect: "/",
+    successRedirect: "/dashboard",
   })
 }
 

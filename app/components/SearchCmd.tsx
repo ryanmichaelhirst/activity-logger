@@ -127,7 +127,9 @@ export function SearchCmd(props: {
                             console.log("CommandItem.onSelect", { searchResult })
                           }}
                           {...(props.disabled && { tabIndex: -1 })}
+                          className="space-x-2"
                         >
+                          <img src={searchResult.img} className="h-4 w-4" />
                           <span>{searchResult.label}</span>
                         </CommandItem>
                       )
