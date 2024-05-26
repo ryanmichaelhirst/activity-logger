@@ -1,14 +1,23 @@
 import { ButtonLink } from "@/components/ButtonLink"
+import { SearchCmd } from "@/components/SearchCmd"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { cn } from "@/utils"
 import { MetaFunction } from "@remix-run/node"
+import { useSearchParams } from "@remix-run/react"
 import { ShieldAlertIcon } from "lucide-react"
 import { useEffect } from "react"
-import { useTypedLoaderData } from "remix-typedjson"
+import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson"
 import { route } from "routes-gen"
-
+import { action } from "./action.server"
 import { loader } from "./loader.server"
 
-export { loader }
+export { action, loader }
 
 export const meta: MetaFunction = () => [{ title: "Remix Railway | Dashboard" }]
 
@@ -48,8 +57,52 @@ export default function Page() {
         )}
         {...(data.freeTrialExpired && { tabIndex: -1 })}
       >
-        <p>Dashboard content here</p>
+        <SearchInput />
       </div>
     </main>
+  )
+}
+
+function SearchInput() {
+  const fetcher = useTypedFetcher<typeof action>()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const onSearch = (query: string) => {
+    const searchType = searchParams.get("searchType")
+
+    fetcher.submit(
+      { query, searchType },
+      {
+        method: "POST",
+        action: route("/dashboard"),
+      },
+    )
+  }
+
+  const isLoading = fetcher.state === "loading" || fetcher.state === "submitting"
+  const searchResults = fetcher.data?.searchResults
+
+  console.log("got searchResults", searchResults)
+
+  return (
+    <div>
+      <Select
+        onValueChange={(value) => {
+          searchParams.set("searchType", value)
+          setSearchParams(searchParams)
+        }}
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Type" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="movie">Movie / TV Show</SelectItem>
+          <SelectItem value="book">Book</SelectItem>
+          <SelectItem value="anime">Anime</SelectItem>
+          <SelectItem value="place">Place</SelectItem>
+        </SelectContent>
+      </Select>
+      <SearchCmd onSearch={onSearch} isLoading={isLoading} searchResults={searchResults} />
+    </div>
   )
 }
