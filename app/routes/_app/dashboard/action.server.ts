@@ -1,3 +1,4 @@
+import { aniList } from "@/lib/anilist.server"
 import { getBookCoverImageUrl, openLib } from "@/lib/openlib.server"
 import { getImageUrl, tmdb } from "@/lib/tmdb.server"
 import { app } from "@/utils/app.server"
@@ -51,6 +52,7 @@ export const action = (args: ActionFunctionArgs) =>
         })
         .with("book", async () => {
           const resp = await openLib.search({ query: form.query })
+
           return resp.docs.map((doc) => {
             return {
               id: doc.cover_i,
@@ -59,6 +61,20 @@ export const action = (args: ActionFunctionArgs) =>
               img: getBookCoverImageUrl(doc.cover_edition_key),
             }
           })
+        })
+        .with("anime", async () => {
+          const resp = await aniList.search(form.query)
+
+          return resp.data.Page.media
+            .map((media) => {
+              return {
+                id: media.id,
+                value: media.title.english,
+                label: media.title.english,
+                img: media.coverImage?.medium,
+              }
+            })
+            .filter((media) => !!media.value) // title can be null when it's not available in English, this will crash the cmdk package
         })
         .otherwise(() => {
           return []
