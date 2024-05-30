@@ -11,6 +11,7 @@ const EnvSchema = z.object({
   GOOGLE_OAUTH_CLIENT_ID: z.string().min(1),
   GOOGLE_OAUTH_CLIENT_SECRET: z.string().min(1),
   TMDB_API_KEY: z.string().min(1),
+  RADAR_PUBLISHABLE_KEY: z.string().min(1),
 })
 
 const ENV = singleton("env", () => {
