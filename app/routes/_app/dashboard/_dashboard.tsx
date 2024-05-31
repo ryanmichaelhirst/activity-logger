@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/utils"
+import { useClientIpAddress } from "@/utils/useClientIpAddress"
 import { MetaFunction } from "@remix-run/node"
 import { useSearchParams } from "@remix-run/react"
 import { ShieldAlertIcon } from "lucide-react"
@@ -67,11 +68,17 @@ function SearchInput() {
   const fetcher = useTypedFetcher<typeof action>()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const onSearch = (query: string) => {
-    const searchType = searchParams.get("searchType")
+  const [ipAddress] = useClientIpAddress()
 
+  const onSearch = (query: string) => {
     fetcher.submit(
-      { query, searchType },
+      {
+        query,
+        searchType: searchParams.get("searchType"),
+        ...(ipAddress && {
+          ipAddress,
+        }),
+      },
       {
         method: "POST",
         action: route("/dashboard"),
@@ -81,8 +88,6 @@ function SearchInput() {
 
   const isLoading = fetcher.state === "loading" || fetcher.state === "submitting"
   const searchResults = fetcher.data?.searchResults
-
-  console.log("got searchResults", searchResults)
 
   return (
     <div>

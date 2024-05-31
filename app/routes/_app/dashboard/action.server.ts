@@ -1,10 +1,12 @@
 import { aniList } from "@/lib/anilist.server"
 import { getBookCoverImageUrl, openLib } from "@/lib/openlib.server"
+import { radar } from "@/lib/radar.server"
 import { getImageUrl, tmdb } from "@/lib/tmdb.server"
 import { app } from "@/utils/app.server"
 import { ActionFunctionArgs } from "@remix-run/node"
 import { uniqBy } from "lodash"
 import { typedjson } from "remix-typedjson"
+
 import { match } from "ts-pattern"
 import { z } from "zod"
 
@@ -14,6 +16,7 @@ export const action = (args: ActionFunctionArgs) =>
       z.object({
         query: z.string().min(1),
         searchType: z.enum(["movie", "book", "anime", "place"]),
+        ipAddress: z.string().optional(),
       }),
     )
     .build(async ({ form }) => {
@@ -76,9 +79,28 @@ export const action = (args: ActionFunctionArgs) =>
             })
             .filter((media) => !!media.value) // title can be null when it's not available in English, this will crash the cmdk package
         })
-        .otherwise(() => {
-          return []
+        .with("place", async () => {
+          // Get latitude and longitude from client ip address, needed for Radar places api
+          // https://ip-api.com/docs/api:json
+          let near: string | undefined
+          if (form.ipAddress) {
+            const resp = await fetch(`http://ip-api.com/json/${form.ipAddress}?fields=192`)
+            const json: { lat: number; lon: number } = await resp.json()
+            near = `${json.lat},${json.lon}`
+          }
+
+          const resp = await radar.search({ query: form.query, near })
+
+          return resp.addresses.map((address, idx) => {
+            return {
+              id: idx,
+              value: address.addressLabel,
+              label: address.addressLabel,
+              img: null,
+            }
+          })
         })
+        .exhaustive()
 
       const uniqSearchResults = uniqBy(searchResults, "value")
 

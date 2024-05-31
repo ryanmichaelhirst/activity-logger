@@ -18,22 +18,6 @@ export function SearchCmd(props: {
   isLoading?: boolean
   searchResults?: Array<any>
 }) {
-  // get client ip address
-  const [ipAddress, setIpAddress] = useState<string | null>(null)
-  useEffect(() => {
-    async function getIpAddress() {
-      if (!ipAddress) {
-        const _ipAddress = await (await fetch("https://api.ipify.org")).text()
-
-        if (_ipAddress) {
-          setIpAddress(_ipAddress)
-        }
-      }
-    }
-
-    getIpAddress()
-  }, [])
-
   const inputRef = useRef<HTMLInputElement | null>(null)
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
