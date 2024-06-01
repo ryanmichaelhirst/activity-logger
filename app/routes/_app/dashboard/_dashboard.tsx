@@ -1,17 +1,10 @@
 import { ButtonLink } from "@/components/ButtonLink"
 import { SearchCmd } from "@/components/SearchCmd"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { cn } from "@/utils"
 import { useClientIpAddress } from "@/utils/useClientIpAddress"
 import { MetaFunction } from "@remix-run/node"
 import { useSearchParams } from "@remix-run/react"
-import { ShieldAlertIcon } from "lucide-react"
+import { BookIcon, FilmIcon, MapPinIcon, PaletteIcon, ShieldAlertIcon, TvIcon } from "lucide-react"
 import { useEffect } from "react"
 import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson"
 import { route } from "routes-gen"
@@ -70,11 +63,13 @@ function SearchInput() {
 
   const [ipAddress] = useClientIpAddress()
 
+  const searchType = searchParams.get("searchType")
+
   const onSearch = (query: string) => {
     fetcher.submit(
       {
         query,
-        searchType: searchParams.get("searchType"),
+        searchType,
         ...(ipAddress && {
           ipAddress,
         }),
@@ -91,23 +86,40 @@ function SearchInput() {
 
   return (
     <div>
-      <Select
-        onValueChange={(value) => {
-          searchParams.set("searchType", value)
-          setSearchParams(searchParams)
-        }}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Type" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="movie">Movie / TV Show</SelectItem>
-          <SelectItem value="book">Book</SelectItem>
-          <SelectItem value="anime">Anime</SelectItem>
-          <SelectItem value="place">Place</SelectItem>
-        </SelectContent>
-      </Select>
+      <ul className="mb-8 flex list-none justify-around space-x-4">
+        {SEARCH_TYPES.map((item) => {
+          return (
+            <li
+              key={item.label}
+              className="flex cursor-pointer flex-col items-center"
+              onClick={() => {
+                searchParams.set("searchType", item.value)
+                setSearchParams(searchParams)
+              }}
+            >
+              <div
+                className={cn("w-fit rounded-full border-2 p-4")}
+                style={{
+                  backgroundColor: item.backgroundColor,
+                  borderColor: searchType === item.value ? "#3b82f6" : item.backgroundColor,
+                }}
+              >
+                <item.icon className="h-4 w-4" />
+              </div>
+              <span className="mt-3">{item.label}</span>
+            </li>
+          )
+        })}
+      </ul>
       <SearchCmd onSearch={onSearch} isLoading={isLoading} searchResults={searchResults} />
     </div>
   )
 }
+
+const SEARCH_TYPES = [
+  { value: "movie", label: "Movie", icon: FilmIcon, backgroundColor: "#006769" },
+  { value: "tv_show", label: "TV Show", icon: TvIcon, backgroundColor: "#40A578" },
+  { value: "book", label: "Book", icon: BookIcon, backgroundColor: "#803D3B" },
+  { value: "anime", label: "Anime", icon: PaletteIcon, backgroundColor: "#FF5580" },
+  { value: "place", label: "Place", icon: MapPinIcon, backgroundColor: "#7469B6" },
+]

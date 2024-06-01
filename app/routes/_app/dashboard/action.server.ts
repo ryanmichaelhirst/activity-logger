@@ -7,7 +7,7 @@ import { ActionFunctionArgs } from "@remix-run/node"
 import { uniqBy } from "lodash"
 import { typedjson } from "remix-typedjson"
 
-import { match } from "ts-pattern"
+import { P, match } from "ts-pattern"
 import { z } from "zod"
 
 export const action = (args: ActionFunctionArgs) =>
@@ -15,13 +15,13 @@ export const action = (args: ActionFunctionArgs) =>
     .parseForm(
       z.object({
         query: z.string().min(1),
-        searchType: z.enum(["movie", "book", "anime", "place"]),
+        searchType: z.enum(["movie", "tv_show", "book", "anime", "place"]),
         ipAddress: z.string().optional(),
       }),
     )
     .build(async ({ form }) => {
       const searchResults = await match(form.searchType)
-        .with("movie", async () => {
+        .with(P.union("movie", "tv_show"), async () => {
           const resp = await tmdb.searchMulti({ query: form.query })
 
           return resp.results?.map((result) => {
