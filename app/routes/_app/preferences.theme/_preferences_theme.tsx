@@ -1,6 +1,6 @@
 import { redirectBack } from "remix-utils/redirect-back"
 
-import { sessionStorage } from "@/lib/session.server"
+import { getSession, sessionStorage } from "@/lib/session.server"
 import { app } from "@/utils/app.server"
 import { ActionFunctionArgs } from "@remix-run/node"
 import { z } from "zod"
@@ -23,3 +23,8 @@ export const action = async (args: ActionFunctionArgs) =>
         },
       })
     })
+
+// Default to dark mode
+export function getThemeFromSession(session: Awaited<ReturnType<typeof getSession>>) {
+  return session.get("theme") ?? "dark"
+}

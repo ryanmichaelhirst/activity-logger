@@ -57,6 +57,7 @@ export default function Page() {
   )
 }
 
+// Source: https://dribbble.com/search/new-post-form
 function SearchInput() {
   const fetcher = useTypedFetcher<typeof action>()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -98,7 +99,7 @@ function SearchInput() {
               }}
             >
               <div
-                className={cn("w-fit rounded-full border-2 p-4")}
+                className={cn("w-fit rounded-full border-4 p-4 hover:!border-blue-500")}
                 style={{
                   backgroundColor: item.backgroundColor,
                   borderColor: searchType === item.value ? "#3b82f6" : item.backgroundColor,

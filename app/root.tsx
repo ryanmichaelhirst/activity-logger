@@ -4,6 +4,7 @@ import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@re
 
 import stylesheet from "@/styles/tailwind.css"
 import { typedjson, useTypedLoaderData } from "remix-typedjson"
+import { getThemeFromSession } from "./routes/_app/preferences.theme/_preferences_theme"
 import { cn } from "./utils"
 import { app } from "./utils/app.server"
 
@@ -14,7 +15,7 @@ export const links: LinksFunction = () => [
 
 export const loader = async (args: LoaderFunctionArgs) =>
   app(args).build(async (ctx) => {
-    const theme = ctx.session.get("theme")
+    const theme = getThemeFromSession(ctx.session)
 
     return typedjson({ theme })
   })

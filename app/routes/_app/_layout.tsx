@@ -24,6 +24,7 @@ import { typedjson, useTypedLoaderData } from "remix-typedjson"
 import { route } from "routes-gen"
 import { z } from "zod"
 import { Footer } from "./Footer"
+import { getThemeFromSession } from "./preferences.theme/_preferences_theme"
 
 export const loader = async (args: LoaderFunctionArgs) =>
   app(args)
@@ -34,7 +35,7 @@ export const loader = async (args: LoaderFunctionArgs) =>
     )
     .withUser()
     .build(async ({ user, session }) => {
-      const theme = session.get("theme")
+      const theme = getThemeFromSession(session)
 
       return typedjson({
         user,
