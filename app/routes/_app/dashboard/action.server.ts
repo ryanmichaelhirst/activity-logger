@@ -7,7 +7,7 @@ import { ActionFunctionArgs } from "@remix-run/node"
 import { uniqBy } from "lodash"
 import { typedjson } from "remix-typedjson"
 
-import { P, match } from "ts-pattern"
+import { match } from "ts-pattern"
 import { z } from "zod"
 
 export const action = (args: ActionFunctionArgs) =>
@@ -21,14 +21,14 @@ export const action = (args: ActionFunctionArgs) =>
     )
     .build(async ({ form }) => {
       const searchResults = await match(form.searchType)
-        .with(P.union("movie"), async () => {
+        .with("movie", async () => {
           const resp = await tmdb.searchMulti({ query: form.query })
 
           return resp.results?.map((result) => {
             return match(result)
               .with({ media_type: "movie" }, (data) => {
                 return {
-                  id: data.id,
+                  id: data.id?.toString(),
                   value: data.title,
                   label: data.title,
                   img: data?.poster_path ? getImageUrl(data?.poster_path) : null,
@@ -36,7 +36,7 @@ export const action = (args: ActionFunctionArgs) =>
               })
               .with({ media_type: "tv" }, (data) => {
                 return {
-                  id: data.id,
+                  id: data.id?.toString(),
                   value: data.name,
                   label: data.name,
                   img: data?.poster_path ? getImageUrl(data?.poster_path) : null,
@@ -44,7 +44,7 @@ export const action = (args: ActionFunctionArgs) =>
               })
               .with({ media_type: "person" }, (data) => {
                 return {
-                  id: data.id,
+                  id: data.id?.toString(),
                   value: data.name,
                   label: data.name,
                   img: data.profile_path ? getImageUrl(data.profile_path) : null,
@@ -58,7 +58,7 @@ export const action = (args: ActionFunctionArgs) =>
 
           return resp.docs.map((doc) => {
             return {
-              id: doc.cover_i,
+              id: doc.cover_i.toString(),
               value: doc.title,
               label: doc.title,
               img: getBookCoverImageUrl(doc.cover_edition_key),
@@ -71,7 +71,7 @@ export const action = (args: ActionFunctionArgs) =>
           return resp.data.Page.media
             .map((media) => {
               return {
-                id: media.id,
+                id: media.id.toString(),
                 value: media.title.english,
                 label: media.title.english,
                 img: media.coverImage?.medium,
@@ -91,9 +91,9 @@ export const action = (args: ActionFunctionArgs) =>
 
           const resp = await radar.search({ query: form.query, near })
 
-          return resp.addresses.map((address, idx) => {
+          return resp.addresses.map((address) => {
             return {
-              id: idx,
+              id: address.formattedAddress,
               value: address.addressLabel,
               label: address.addressLabel,
               img: null,

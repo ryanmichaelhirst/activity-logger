@@ -18,6 +18,7 @@ import {
   CircleUserRoundIcon,
   CreditCardIcon,
   LayoutDashboardIcon,
+  ListIcon,
   LogOutIcon,
 } from "lucide-react"
 import { typedjson, useTypedLoaderData } from "remix-typedjson"
@@ -106,6 +107,15 @@ export function Menubar(props: LayoutLoaderData) {
                   >
                     <LayoutDashboardIcon />
                     <span>Dashboard</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      navigate(route("/profile"))
+                    }}
+                    className="space-x-4"
+                  >
+                    <ListIcon />
+                    <span>Profile</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {

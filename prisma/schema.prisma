@@ -20,6 +20,7 @@ model User {
   photoUrl String?
 
   payment Payment[]
+  activity Activity[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
@@ -38,5 +39,23 @@ model Payment {
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
+  deletedAt DateTime?
+}
+
+// Activity record
+model Activity {
+  id      Int    @id @default(autoincrement())
+  uid     String @unique @default(dbgenerated("('act_'::text || nanoid())"))
+  name    String
+  type String
+  // ID of the api object, i.e. anilist object id or openlib object id
+  objectId String?
+  photoUrl String?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
   deletedAt DateTime?
 }

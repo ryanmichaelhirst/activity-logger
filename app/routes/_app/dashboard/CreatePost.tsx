@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/utils"
 import { useClientIpAddress } from "@/utils/useClientIpAddress"
-import { useSearchParams } from "@remix-run/react"
+import { Form, useSearchParams } from "@remix-run/react"
 import { BookIcon, FilmIcon, MapPinIcon, PaletteIcon } from "lucide-react"
 import { useEffect, useRef } from "react"
 import { useTypedFetcher } from "remix-typedjson"
@@ -21,6 +21,8 @@ export function CreatePost() {
   const [searchParams, setSearchParams] = useSearchParams()
   const searchType = searchParams.get("searchType")
   const selectedActivity = searchParams.get("activity")
+  const objectId = searchParams.get("objectId")
+  const photoUrl = searchParams.get("photoUrl")
 
   const [ipAddress] = useClientIpAddress()
 
@@ -30,6 +32,8 @@ export function CreatePost() {
       if (e.key === "Enter") {
         e.preventDefault()
         inputRef?.current?.focus()
+        console.log("event", e)
+
         fetcher.submit(
           {
             // @ts-expect-error - TS doesn't know about e.target?
@@ -69,7 +73,7 @@ export function CreatePost() {
           <div className="space-y-4">
             <Label>Activity type</Label>
             <ul className="flex list-none justify-around space-x-4">
-              {SEARCH_TYPES.map((item) => {
+              {SEARCH_TYPES_ARRAY.map((item) => {
                 const isSelected = searchType === item.value
 
                 return (
@@ -132,6 +136,15 @@ export function CreatePost() {
                       onClick={() => {
                         if (item.value) {
                           searchParams.set("activity", item.value)
+
+                          if (item.id) {
+                            searchParams.set("objectId", item.id)
+                          }
+
+                          if (item.img) {
+                            searchParams.set("photoUrl", item.img)
+                          }
+
                           setSearchParams(searchParams)
                         }
                       }}
@@ -154,32 +167,68 @@ export function CreatePost() {
             <div className="space-y-4">
               <Label className="italic">Preview</Label>
               <Card>
-                <CardContent className="space-y-4 py-4">
-                  <span className="font-bold text-sky-500">@ryanmichael_hirst</span>
-                  <span> watched </span>
-                  <span className="font-bold text-sky-500">{selectedActivity}</span>
+                <CardContent className="pt-6">
+                  <div className="flex space-x-2">
+                    <span className="font-bold text-sky-500">@ryanmichael_hirst</span>
+                    <span>{SEARCH_TYPES[searchType as SearchTypeKey].verb}</span>
+                    <span className="font-bold text-sky-500">{selectedActivity}</span>
+                  </div>
                 </CardContent>
               </Card>
             </div>
           )}
 
-          <div className="flex justify-between">
-            <Button variant="outline" size="sm">
-              Cancel
-            </Button>
-            <Button variant="default" size="sm">
-              Create activity
-            </Button>
-          </div>
+          {searchType && selectedActivity && (
+            <div className="flex justify-between">
+              <Button variant="outline" size="sm">
+                Cancel
+              </Button>
+              <Form method="POST" action={route("/activity/create")}>
+                <input type="hidden" name="type" value={searchType} />
+                <input type="hidden" name="name" value={selectedActivity} />
+                {objectId && <input type="hidden" name="objectId" value={objectId} />}
+                {photoUrl && <input type="hidden" name="photoUrl" value={photoUrl} />}
+                <Button variant="default" size="sm">
+                  Create activity
+                </Button>
+              </Form>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
   )
 }
 
-const SEARCH_TYPES = [
-  { value: "movie", label: "Movie / TV", icon: FilmIcon, backgroundColor: "#006769" },
-  { value: "book", label: "Book", icon: BookIcon, backgroundColor: "#803D3B" },
-  { value: "anime", label: "Anime", icon: PaletteIcon, backgroundColor: "#FF5580" },
-  { value: "place", label: "Place", icon: MapPinIcon, backgroundColor: "#7469B6" },
-]
+const SEARCH_TYPES = {
+  movie: {
+    label: "Movie / TV",
+    icon: FilmIcon,
+    backgroundColor: "#006769",
+    verb: "watched",
+  },
+  book: {
+    label: "Book",
+    icon: BookIcon,
+    backgroundColor: "#803D3B",
+    verb: "read",
+  },
+  anime: {
+    label: "Anime",
+    icon: PaletteIcon,
+    backgroundColor: "#FF5580",
+    verb: "watched",
+  },
+  place: {
+    label: "Place",
+    icon: MapPinIcon,
+    backgroundColor: "#7469B6",
+    verb: "visited",
+  },
+}
+type SearchTypeKey = keyof typeof SEARCH_TYPES
+
+const SEARCH_TYPES_ARRAY = Object.entries(SEARCH_TYPES).map(([key, value]) => ({
+  value: key,
+  ...value,
+}))
