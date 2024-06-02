@@ -15,13 +15,13 @@ export const action = (args: ActionFunctionArgs) =>
     .parseForm(
       z.object({
         query: z.string().min(1),
-        searchType: z.enum(["movie", "tv_show", "book", "anime", "place"]),
+        searchType: z.enum(["movie", "book", "anime", "place"]),
         ipAddress: z.string().optional(),
       }),
     )
     .build(async ({ form }) => {
       const searchResults = await match(form.searchType)
-        .with(P.union("movie", "tv_show"), async () => {
+        .with(P.union("movie"), async () => {
           const resp = await tmdb.searchMulti({ query: form.query })
 
           return resp.results?.map((result) => {

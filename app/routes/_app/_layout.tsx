@@ -91,15 +91,8 @@ export function Menubar(props: LayoutLoaderData) {
             {props.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  {props.user.photoUrl ? (
-                    <img
-                      src={props.user.photoUrl}
-                      alt={props.user.name}
-                      className="h-10 w-10 rounded-full border-2"
-                    />
-                  ) : (
-                    <CircleUserRoundIcon />
-                  )}
+                  {/* props.user.photoUrl does not work here? */}
+                  <CircleUserRoundIcon />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="bottom" align="end" className="px-4">
                   <DropdownMenuLabel>{props.user.name}</DropdownMenuLabel>

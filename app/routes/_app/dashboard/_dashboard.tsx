@@ -1,9 +1,6 @@
-import { ButtonLink } from "@/components/ButtonLink"
 import { MetaFunction } from "@remix-run/node"
-import { ShieldAlertIcon } from "lucide-react"
 import { useEffect } from "react"
 import { useTypedLoaderData } from "remix-typedjson"
-import { route } from "routes-gen"
 import { CreatePost } from "./CreatePost"
 import { action } from "./action.server"
 import { loader } from "./loader.server"
@@ -26,21 +23,8 @@ export default function Page() {
 
   return (
     <main className="mx-auto mb-40 flex flex-col space-y-6 px-16 pt-6 lg:px-24">
-      <h1 className="text-center text-5xl">Lorem ipsum dolor sit amet</h1>
-      <div className="space-x-2 text-center text-2xl">Lorem ipsum dolor sit amet</div>
-      {data.freeTrialExpired && (
-        <div className="mx-auto mb-4 w-1/2 space-y-8 text-center">
-          <ShieldAlertIcon className="mx-auto h-16 w-16 text-red-500" />
-          <p className="text-3xl font-semibold">Free trial is expired</p>
-          <p className="text-lg">
-            Your free trial period is over. To continue using Lyrically please make a one time
-            payment for a premium account.
-          </p>
-          <ButtonLink to={route("/checkout")} variant="default">
-            Upgrade to Premium
-          </ButtonLink>
-        </div>
-      )}
+      <h1 className="text-center text-5xl">Welcome</h1>
+      <div className="space-x-2 text-center text-2xl">What did you do today?</div>
       <CreatePost />
     </main>
   )
