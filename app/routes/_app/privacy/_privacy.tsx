@@ -7,7 +7,7 @@ export default function Page() {
           Remix Railway ("us", "we", or "our") operates https://remixrailway.app (the "Site"). This
           page informs you of our policies regarding the collection, use, and disclosure of Personal
           Information we receive from users of the Site. We use your Personal Information only to
-          power the dashboard page of the Site. By using the Site, you agree to the collection and
+          power your profile page of the Site. By using the Site, you agree to the collection and
           use of information in accordance with this policy.
         </TextBlock>
 

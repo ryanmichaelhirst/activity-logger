@@ -58,7 +58,7 @@ export const action = (args: ActionFunctionArgs) =>
 
           return resp.docs.map((doc) => {
             return {
-              id: doc.cover_i.toString(),
+              id: doc.cover_i?.toString(),
               value: doc.title,
               label: doc.title,
               img: getBookCoverImageUrl(doc.cover_edition_key),

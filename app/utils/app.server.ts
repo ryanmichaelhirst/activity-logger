@@ -104,6 +104,7 @@ class App<T extends {}> {
     return this.with(async (args) => {
       const parsedForm = await zx.parseFormSafe(args.request, schema)
       if (!parsedForm.success) {
+        console.log("parsedForm.error", parsedForm.error)
         throw new Error("Error in parseForm()")
       }
 

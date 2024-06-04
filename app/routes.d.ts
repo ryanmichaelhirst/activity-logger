@@ -2,11 +2,12 @@ declare module "routes-gen" {
   export type RouteParams = {
     "/": Record<string, never>;
     "/activity/create": Record<string, never>;
+    "/activity/search": Record<string, never>;
     "/auth/login": Record<string, never>;
     "/auth/logout": Record<string, never>;
     "/auth/redirect": Record<string, never>;
     "/checkout": Record<string, never>;
-    "/dashboard": Record<string, never>;
+    "/checkout/complete": Record<string, never>;
     "/health-check": Record<string, never>;
     "/preferences/theme": Record<string, never>;
     "/privacy": Record<string, never>;
@@ -19,11 +20,12 @@ declare module "routes-gen" {
     T extends
       | ["/"]
       | ["/activity/create"]
+      | ["/activity/search"]
       | ["/auth/login"]
       | ["/auth/logout"]
       | ["/auth/redirect"]
       | ["/checkout"]
-      | ["/dashboard"]
+      | ["/checkout/complete"]
       | ["/health-check"]
       | ["/preferences/theme"]
       | ["/privacy"]

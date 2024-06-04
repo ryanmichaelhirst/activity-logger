@@ -6,17 +6,46 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { ACTIVITY_TYPES, ACTIVITY_TYPES_ARRAY, ActivityTypeKey } from "@/lib/activityTypes"
 import { cn } from "@/utils"
 import { useClientIpAddress } from "@/utils/useClientIpAddress"
+import { MetaFunction } from "@remix-run/node"
 import { Form, useSearchParams } from "@remix-run/react"
 import { useEffect, useRef } from "react"
-import { useTypedFetcher } from "remix-typedjson"
+import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson"
 import { route } from "routes-gen"
+import { useEventListener } from "usehooks-ts"
+import { action as activitySearchAction } from "../activity.search/_activity_search"
 import { action } from "./action.server"
+import { loader } from "./loader.server"
+
+export { action, loader }
+
+export const meta: MetaFunction = () => [{ title: "Remix Railway | Create activity" }]
+
+export default function Page() {
+  const data = useTypedLoaderData<typeof loader>()
+
+  useEffect(() => {
+    if (!data.stripeSession) return
+    if (data.stripeSession.status === "open") {
+      console.log("Stripe session is open")
+    } else if (data.stripeSession.status === "complete") {
+      console.log("Stripe session is complete")
+    }
+  }, [data.stripeSession])
+
+  return (
+    <main className="mx-auto mb-40 flex flex-col space-y-6 px-16 pt-6 lg:px-24">
+      <h1 className="text-center text-5xl">Welcome</h1>
+      <div className="space-x-2 text-center text-2xl">What did you do today?</div>
+      <CreatePost />
+    </main>
+  )
+}
 
 // Source: https://dribbble.com/search/new-post-form
 // Source: https://dribbble.com/shots/19030492-Daily-UI-081-Status-Update/attachments/14196295?mode=media
 // Source: https://dribbble.com/shots/20750880-Project-Dashboard-element
 export function CreatePost() {
-  const fetcher = useTypedFetcher<typeof action>()
+  const fetcher = useTypedFetcher<typeof activitySearchAction>()
 
   const [searchParams, setSearchParams] = useSearchParams()
   const searchType = searchParams.get("searchType")
@@ -27,36 +56,27 @@ export function CreatePost() {
   const [ipAddress] = useClientIpAddress()
 
   const inputRef = useRef<HTMLInputElement | null>(null)
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        e.preventDefault()
-        // inputRef?.current?.focus()
-        console.log("event", e)
 
-        fetcher.submit(
-          {
-            // @ts-expect-error - TS doesn't know about e.target?
-            query: e.target.value,
-            searchType,
-            ...(ipAddress && {
-              ipAddress,
-            }),
-          },
-          {
-            method: "POST",
-            action: route("/dashboard"),
-          },
-        )
+  useEventListener("keydown", onSearchActivity)
+  function onSearchActivity(e: KeyboardEvent) {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      const form = {
+        // @ts-expect-error - TS doesn't know about e.target?
+        query: e.target.value,
+        searchType,
+        ...(ipAddress && {
+          ipAddress,
+        }),
       }
+      console.log("/activity/search form", form)
+      fetcher.submit(form, {
+        method: "POST",
+        action: route("/activity/search"),
+      })
     }
+  }
 
-    window.document.addEventListener("keydown", down)
-
-    return () => {
-      window.document.removeEventListener("keydown", down)
-    }
-  }, [])
   const searchResults = fetcher.data?.searchResults
 
   return (

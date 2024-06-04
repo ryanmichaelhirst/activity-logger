@@ -21,7 +21,7 @@ type SearchResponse = {
     isbn: Array<string>
     edition_key: Array<string>
     cover_edition_key: string
-    cover_i: number
+    cover_i?: number
   }>
   q: string
   num_found: number

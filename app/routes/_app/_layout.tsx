@@ -15,9 +15,9 @@ import { LoaderFunctionArgs } from "@remix-run/node"
 import { Outlet, useNavigate, useSubmit } from "@remix-run/react"
 import {
   BadgeCheckIcon,
+  CirclePlusIcon,
   CircleUserRoundIcon,
   CreditCardIcon,
-  LayoutDashboardIcon,
   ListIcon,
   LogOutIcon,
 } from "lucide-react"
@@ -101,12 +101,12 @@ export function Menubar(props: LayoutLoaderData) {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => {
-                      navigate(route("/dashboard"))
+                      navigate(route("/activity/create"))
                     }}
                     className="space-x-4"
                   >
-                    <LayoutDashboardIcon />
-                    <span>Dashboard</span>
+                    <CirclePlusIcon />
+                    <span>Create activity</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
@@ -135,7 +135,6 @@ export function Menubar(props: LayoutLoaderData) {
                   <DropdownMenuSeparator />
                   {props.user.payment.length === 0 ? (
                     <>
-                      <DropdownMenuSeparator />
                       <Button
                         className="my-2 space-x-2"
                         onClick={() => {

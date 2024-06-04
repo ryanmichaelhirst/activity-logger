@@ -39,8 +39,8 @@ export const loader = async (args: LoaderFunctionArgs) =>
         ui_mode: "embedded",
         return_url:
           ENV.APP_ENV === "development"
-            ? "http://localhost:3000/dashboard?session_id={CHECKOUT_SESSION_ID}"
-            : "https://remixrailway.app/dashboard?session_id={CHECKOUT_SESSION_ID}",
+            ? "http://localhost:3000/checkout/complete?session_id={CHECKOUT_SESSION_ID}"
+            : "https://remixrailway.app/checkout/complete?session_id={CHECKOUT_SESSION_ID}",
       })
 
       return typedjson({
