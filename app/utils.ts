@@ -43,3 +43,13 @@ const ZodStringToJsonTransformer = (
 export function jsonString() {
   return z.string().transform(ZodStringToJsonTransformer)
 }
+
+export function formatFullDate(date: Date) {
+  const dateFormatter = new Intl.DateTimeFormat("en-US", {
+    day: "numeric", // numeric representation of the day
+    month: "long", // full name of the month
+    year: "numeric", // numeric representation of the year
+  })
+
+  return dateFormatter.format(date)
+}

@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { ACTIVITY_TYPES, ACTIVITY_TYPES_ARRAY, ActivityTypeKey } from "@/lib/activityTypes"
 import { cn } from "@/utils"
 import { useClientIpAddress } from "@/utils/useClientIpAddress"
 import { Form, useSearchParams } from "@remix-run/react"
-import { BookIcon, FilmIcon, MapPinIcon, PaletteIcon } from "lucide-react"
 import { useEffect, useRef } from "react"
 import { useTypedFetcher } from "remix-typedjson"
 import { route } from "routes-gen"
@@ -31,7 +31,7 @@ export function CreatePost() {
     const down = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         e.preventDefault()
-        inputRef?.current?.focus()
+        // inputRef?.current?.focus()
         console.log("event", e)
 
         fetcher.submit(
@@ -73,7 +73,7 @@ export function CreatePost() {
           <div className="space-y-4">
             <Label>Activity type</Label>
             <ul className="flex list-none justify-around space-x-4">
-              {SEARCH_TYPES_ARRAY.map((item) => {
+              {ACTIVITY_TYPES_ARRAY.map((item) => {
                 const isSelected = searchType === item.value
 
                 return (
@@ -170,7 +170,7 @@ export function CreatePost() {
                 <CardContent className="pt-6">
                   <div className="flex space-x-2">
                     <span className="font-bold text-sky-500">@ryanmichael_hirst</span>
-                    <span>{SEARCH_TYPES[searchType as SearchTypeKey].verb}</span>
+                    <span>{ACTIVITY_TYPES[searchType as ActivityTypeKey].verb}</span>
                     <span className="font-bold text-sky-500">{selectedActivity}</span>
                   </div>
                 </CardContent>
@@ -199,36 +199,3 @@ export function CreatePost() {
     </div>
   )
 }
-
-const SEARCH_TYPES = {
-  movie: {
-    label: "Movie / TV",
-    icon: FilmIcon,
-    backgroundColor: "#006769",
-    verb: "watched",
-  },
-  book: {
-    label: "Book",
-    icon: BookIcon,
-    backgroundColor: "#803D3B",
-    verb: "read",
-  },
-  anime: {
-    label: "Anime",
-    icon: PaletteIcon,
-    backgroundColor: "#FF5580",
-    verb: "watched",
-  },
-  place: {
-    label: "Place",
-    icon: MapPinIcon,
-    backgroundColor: "#7469B6",
-    verb: "visited",
-  },
-}
-type SearchTypeKey = keyof typeof SEARCH_TYPES
-
-const SEARCH_TYPES_ARRAY = Object.entries(SEARCH_TYPES).map(([key, value]) => ({
-  value: key,
-  ...value,
-}))

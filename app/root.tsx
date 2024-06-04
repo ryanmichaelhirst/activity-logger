@@ -33,7 +33,10 @@ export default function App() {
       </head>
       <body className="h-full">
         <Outlet />
-        <ScrollRestoration />
+        {/* <ScrollRestoration /> */}
+        {/* Prevents scroll to top when search params change in the url */}
+        {/* Source: https://stackoverflow.com/questions/74091148/how-to-prevent-scroll-when-using-usesearchparams */}
+        <ScrollRestoration getKey={(location) => location.pathname} />
         <Scripts />
         <LiveReload />
       </body>
