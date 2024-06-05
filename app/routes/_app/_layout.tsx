@@ -14,6 +14,7 @@ import { app } from "@/utils/app.server"
 import { LoaderFunctionArgs } from "@remix-run/node"
 import { Outlet, useNavigate, useSubmit } from "@remix-run/react"
 import {
+  AlignJustifyIcon,
   BadgeCheckIcon,
   CirclePlusIcon,
   CircleUserRoundIcon,
@@ -107,6 +108,15 @@ export function Menubar(props: LayoutLoaderData) {
                   >
                     <CirclePlusIcon />
                     <span>Create activity</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      navigate(route("/activity/feed"))
+                    }}
+                    className="space-x-4"
+                  >
+                    <AlignJustifyIcon />
+                    <span>Feed</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
