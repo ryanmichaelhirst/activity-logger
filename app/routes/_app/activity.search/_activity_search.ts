@@ -72,8 +72,8 @@ export const action = (args: ActionFunctionArgs) =>
             .map((media) => {
               return {
                 id: media.id.toString(),
-                value: media.title.english,
-                label: media.title.english,
+                value: media.title.english ?? undefined,
+                label: media.title.english ?? undefined,
                 img: media.coverImage?.medium,
               }
             })

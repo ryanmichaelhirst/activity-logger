@@ -41,6 +41,7 @@ export const loader = (args: LoaderFunctionArgs) =>
     })
 
 // Source: https://dribbble.com/shots/23227942-Blog-Post-List-Design
+// Source: https://dribbble.com/shots/20478375-User-profile-dark
 export default function Page() {
   const data = useTypedLoaderData<typeof loader>()
 
@@ -57,7 +58,7 @@ export default function Page() {
             <li key={activity.id}>
               <Card>
                 {activity.photoUrl && (
-                  <img src={activity.photoUrl} className="h-40 w-full rounded-t" />
+                  <img src={activity.photoUrl} className="h-40 w-full rounded-t-lg" />
                 )}
                 <CardContent>
                   <p className="mt-6 text-xl font-medium">{activity.name}</p>

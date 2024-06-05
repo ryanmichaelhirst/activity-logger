@@ -1,5 +1,7 @@
 import { ButtonLink } from "@/components/ButtonLink"
-import { type MetaFunction } from "@remix-run/node"
+import { app } from "@/utils/app.server"
+import { LoaderFunctionArgs, type MetaFunction } from "@remix-run/node"
+import { redirect } from "remix-typedjson"
 import { route } from "routes-gen"
 import { CtaSection } from "./CtaSection"
 import FAQSection from "./FaqSection"
@@ -7,6 +9,17 @@ import { FeatureSection } from "./FeatureSection"
 import { PricingSection } from "./PricingSection"
 
 export const meta: MetaFunction = () => [{ title: "Remix Railway | Boilerplate" }]
+
+export const loader = (args: LoaderFunctionArgs) =>
+  app(args)
+    .withUser()
+    .build(async (ctx) => {
+      if (ctx.user) {
+        return redirect(route("/activity/feed"))
+      }
+
+      return new Response()
+    })
 
 // Inspired by: https://salient.tailwindui.com/
 export default function Page() {

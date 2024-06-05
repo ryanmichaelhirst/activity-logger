@@ -1,9 +1,9 @@
 import LogoImage from "@/assets/logo.webp"
 import { useNavigate } from "@remix-run/react"
 
-// Generated with the following Dalle-3 prompt:
-//
-// create a logo designed in a modern, swan minimalist symmetrical style.
+// Source: https://promptbase.com
+// Dalle-3 prompt:
+// Create a logo designed in a modern, swan minimalist symmetrical style.
 // The logo is a black vector graphic set against a clean, white background.
 // The symmetry of the design adds a sense of balance and harmony, while the use
 // of black and white creates a stark contrast, making the logo stand out.
@@ -13,10 +13,10 @@ export function Logo() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-4">
       <img
         src={LogoImage}
-        className="h-16 w-16 cursor-pointer rounded-lg shadow"
+        className="h-10 w-10 cursor-pointer rounded-full shadow"
         alt="Remix railway logo"
         onClick={() => {
           navigate("/")

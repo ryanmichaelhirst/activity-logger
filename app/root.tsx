@@ -2,9 +2,9 @@ import { cssBundleHref } from "@remix-run/css-bundle"
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node"
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react"
 
+import { getThemeFromSession } from "@/routes/_app/preferences.theme/_preferences_theme"
 import stylesheet from "@/styles/tailwind.css"
 import { typedjson, useTypedLoaderData } from "remix-typedjson"
-import { getThemeFromSession } from "./routes/_app/preferences.theme/_preferences_theme"
 import { cn } from "./utils"
 import { app } from "./utils/app.server"
 
@@ -33,10 +33,10 @@ export default function App() {
       </head>
       <body className="h-full">
         <Outlet />
-        {/* <ScrollRestoration /> */}
+        <ScrollRestoration />
         {/* Prevents scroll to top when search params change in the url */}
         {/* Source: https://stackoverflow.com/questions/74091148/how-to-prevent-scroll-when-using-usesearchparams */}
-        <ScrollRestoration getKey={(location) => location.pathname} />
+        {/* <ScrollRestoration getKey={(location) => location.pathname} /> */}
         <Scripts />
         <LiveReload />
       </body>

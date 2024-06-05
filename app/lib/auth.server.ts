@@ -77,7 +77,15 @@ export async function getUser(request: Request) {
       id: userSession.id,
     },
     include: {
-      payment: true,
+      payment: {
+        where: {
+          deletedAt: null,
+        },
+        take: 1,
+        orderBy: {
+          updatedAt: "desc",
+        },
+      },
     },
   })
 

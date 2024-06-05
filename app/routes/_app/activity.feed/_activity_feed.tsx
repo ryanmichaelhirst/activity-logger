@@ -27,9 +27,7 @@ export default function ActivityFeed() {
   const data = useTypedLoaderData<typeof loader>()
 
   return (
-    <main className="mx-auto mb-40 flex w-2/3 flex-col space-y-6 px-16 pt-6 lg:px-24">
-      <h1 className="text-center text-5xl">What's happening lately</h1>
-      <div className="space-x-2 text-center text-2xl">Catch up on what you missed</div>
+    <main className="">
       <ul className="space-y-6">
         {data.activities.map((activity) => {
           return (
