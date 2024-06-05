@@ -60,7 +60,7 @@ type SearchResponse = {
         id: number
         title: {
           romaji: string
-          english: string
+          english: string | null
           native: string
           userPreferred: string
         }

@@ -2,6 +2,7 @@ import { db } from "@/lib/db.server"
 
 import { logout, sessionStorage } from "@/lib/session.server"
 import { ENV } from "@/utils/env.server"
+import { faker } from "@faker-js/faker"
 import { Authenticator } from "remix-auth"
 import { GoogleStrategy } from "remix-auth-google"
 import util from "util"
@@ -34,7 +35,8 @@ authenticator.use(
     },
     async ({ accessToken, refreshToken, extraParams, profile }) => {
       const email = profile.emails[0].value
-      const photoUrl = profile.photos[0].value
+      // generate a random avatar img if the user doesn't have one
+      const photoUrl = profile.photos[0].value ?? faker.image.avatar()
 
       const user = await db.user.upsert({
         where: {

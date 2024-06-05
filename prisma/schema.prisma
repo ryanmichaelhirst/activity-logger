@@ -17,7 +17,7 @@ model User {
   googleId String     @unique
   email    String  @unique
   name     String
-  photoUrl String?
+  photoUrl String
 
   payment Payment[]
   activity Activity[]
