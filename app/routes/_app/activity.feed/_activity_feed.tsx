@@ -26,6 +26,8 @@ export const loader = (args: AppArgs) =>
 export default function ActivityFeed() {
   const data = useTypedLoaderData<typeof loader>()
 
+  console.log("data", data)
+
   return (
     <main className="">
       <ul className="space-y-6">
@@ -34,7 +36,7 @@ export default function ActivityFeed() {
             <li key={activity.id}>
               <Card>
                 <CardHeader className="flex flex-row items-center space-x-4">
-                  <img src={activity.user.photoUrl} className="h-12 w-12 rounded-full" />
+                  {/* <img src={activity.user.photoUrl} className="h-12 w-12 rounded-full" /> */}
                   <div>
                     <CardTitle>{activity.user.name}</CardTitle>
                     <CardDescription className="mt-2">
